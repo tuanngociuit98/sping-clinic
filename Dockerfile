@@ -1,10 +1,10 @@
-FROM openjdk:16-alpine3.13
+FROM maven:3.6.3-jdk-11
 
 WORKDIR /app
 
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline
+RUN ./mvnw package
 
 COPY src ./src
 
