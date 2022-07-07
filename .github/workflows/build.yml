@@ -18,6 +18,7 @@ jobs:
 
           - name: Build artifacts
             run: |
+             chmod +x mvnw
               mvn -N wrapper:wrapper -Dmaven=3.5.2
               ./mvnw spring-boot:build-image
 
