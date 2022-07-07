@@ -40,7 +40,7 @@ jobs:
               name: website artifacts
 
           - name: Display structure of downloaded files
-            run: ls -R
+            run: pwd
 
           - name: Setup docker buildx
             uses: docker/setup-buildx-action@v2
