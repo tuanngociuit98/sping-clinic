@@ -5,6 +5,7 @@ on:
     
 jobs: 
       Build-artifacts:
+
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code 
@@ -30,6 +31,8 @@ jobs:
 
       Build-docker-images:
         runs-on: ubuntu-latest
+        needs: Build-artifacts
+        
         steps:
           - name: Download artifacts product
             uses: actions/download-artifact@v3
