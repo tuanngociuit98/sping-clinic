@@ -1,0 +1,11 @@
+name: build project
+on:
+    push:
+      branches: [ main]
+
+jobs: 
+      docker:
+        run-on: ubuntu-lastest
+        steps:
+          - name: checkout
+            uses: actions/checkout@v2
