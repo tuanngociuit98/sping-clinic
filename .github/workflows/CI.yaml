@@ -4,7 +4,7 @@ on:
       branches: [main]
     
 jobs: 
-      Build-docker-images:
+      Build-artifacts:
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code 
@@ -15,10 +15,6 @@ jobs:
             with:
               java-version: '11'
               distribution: 'adopt'   
-          - name: Setup docker buildx
-            uses: docker/setup-buildx-action@v2
-            id: buildx
-
 
           - name: Build artifacts
             run: |
@@ -26,13 +22,29 @@ jobs:
               mvn -N wrapper:wrapper -Dmaven=3.5.2
               ./mvnw spring-boot:build-image
 
+          - name: Upload artifacts of product
+            uses: actions/upload-artifact@v3
+            with:
+              name: website artifacts
+              path: target/spring-petclinic-2.6.0-SNAPSHOT.jar   
+
+      Build-docker-images:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Download artifacts product
+            uses: actions/download-artifact@v3
+            with:
+              name: website artifacts
+              
+          - name: Setup docker buildx
+            uses: docker/setup-buildx-action@v2
+            id: buildx
+
           - name: Login docker hub
             uses: docker/login-action@v1
             with:
                 username: ${{ secrets.DOCKER_HUB_USERNAME}}
                 password: ${{ secrets.DOCKER_HUB_PASSWORD}}
-          
-          
 
           - name: Build and push Docker Image
             uses: docker/build-push-action@v2
