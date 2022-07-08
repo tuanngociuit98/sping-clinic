@@ -60,7 +60,7 @@ jobs:
               file: ./Dockerfile
               builder: ${{steps.buildx.output.name}}
               push: true
-              tags: ${{secrets.DOCKER_HUB_USERNAME}}/spring-petclinic
+              tags: ${{secrets.DOCKER_HUB_USERNAME}}/latest
 
           - name: Verify
             run: echo ${{steps.docker_build.output.digest }}    
