@@ -27,7 +27,7 @@ jobs:
             uses: actions/upload-artifact@v3
             with:
               name: website artifacts
-              path: target/spring-petclinic-2.6.0-SNAPSHOT.jar   
+              path: spring-petclinic-2.6.0-SNAPSHOT.jar   
 
       Build-docker-images:
         runs-on: ubuntu-latest
