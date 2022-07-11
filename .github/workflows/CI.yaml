@@ -24,6 +24,9 @@ jobs:
              chmod +x mvnw
               mvn -N wrapper:wrapper -Dmaven=3.5.2
               ./mvnw spring-boot:build-image
+
+
+
           - name: Upload snapshots
             uses: actions/upload-artifact@v3
             with:
@@ -101,7 +104,10 @@ jobs:
               distribution: 'adopt'
          
 
-          - run: ./mvnw -B verify sonar:sonar -Dsonar.projectKey=tuanngociuit98 -Dsonar.organization=tuanngociuit98_spring-petclinic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+          - run: |
+              chmod +x mvnw
+              mvn -N wrapper:wrapper -Dmaven=3.5.2
+              ./mvnw -B verify sonar:sonar -Dsonar.projectKey=tuanngociuit98 -Dsonar.organization=tuanngociuit98_spring-petclinic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
           
           - name: SonarCloud Scan
             uses: sonarsource/sonarcloud-github-action@master
