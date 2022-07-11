@@ -17,12 +17,7 @@ jobs:
             uses: actions/setup-java@v3
             with:
               java-version: '11'
-              distribution: 'adopt'   
-          - name: SonarCloud Scan
-            uses: sonarsource/sonarcloud-github-action@master
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    
+              distribution: 'adopt'     
             
           - name: Build snapshots for web
             run: |
@@ -90,3 +85,21 @@ jobs:
 
         - name: Verify
           run: echo ${{steps.docker_build.output.digest }}         
+
+      Check-quality-code:
+        runs-on:  ubuntu-latest
+        needs:  Build-and-upload-docker-image 
+      
+        steps:
+          - name: Setup java
+            uses: actions/setup-java@v3
+            with:
+              java-version: '11'
+              distribution: 'adopt'
+
+          - name: SonarCloud Scan
+            uses: sonarsource/sonarcloud-github-action@master
+            run: ./mvnw -B verify sonar:sonar -Dsonar.projectKey=tuanngociuit98 -Dsonar.organization=tuanngociuit98_spring-petclinic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}      
