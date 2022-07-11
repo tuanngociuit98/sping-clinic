@@ -54,8 +54,10 @@ jobs:
           uses: actions/download-artifact@v2
           with:
             name: my-snapshot
+        
         - run: |
-            pwd
+            ls
+
         - name: Login docker hub
           uses: docker/login-action@v1
           with:
