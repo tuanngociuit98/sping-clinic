@@ -32,7 +32,7 @@ jobs:
               name: my-snapshot
               path: target/spring-petclinic-2.6.0-SNAPSHOT.jar
               required: true
-              if-no-files-found: "No file found"
+             
 
           - name: Cache building dependencies
             uses:  actions/cache@v2
