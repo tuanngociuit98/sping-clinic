@@ -56,7 +56,6 @@ jobs:
           uses: actions/download-artifact@v2
           with:
             name: my-snapshot
-
         - run: |
             ls -R
             pwd
