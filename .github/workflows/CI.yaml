@@ -4,9 +4,8 @@ on:
     # schedule:
     #   - cron: "0/30 * * * *"
     repository_dispatch:
-    push:
-      branches: [main]
-    
+    workflow_dispatch:
+          
 jobs: 
       Build-snapshots:
         runs-on: ubuntu-latest
@@ -58,6 +57,9 @@ jobs:
           with:
             name: my-snapshot
 
+        - run: |
+            ls -R
+            pwd
 
         - name: Login docker hub
           uses: docker/login-action@v1
