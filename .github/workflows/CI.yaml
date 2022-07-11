@@ -30,7 +30,12 @@ jobs:
               name: my-snapshot
               path: target/spring-petclinic-2.6.0-SNAPSHOT.jar
               required: true
-             
+          - name: Upload Dockerfile 
+            uses: actions/upload-artifact@v3   
+            with:
+              name: Dockerfile
+              path: Dockerfile
+              required: true 
 
           - name: Cache building dependencies
             uses:  actions/cache@v2
@@ -54,9 +59,13 @@ jobs:
           uses: actions/download-artifact@v2
           with:
             name: my-snapshot
+        - name: Download Dockerfile
+          uses: actions/download-artifact@v2
+          with:
+            name: Dockerfile
         
         - run: |
-            ls
+            ls -l
 
         - name: Login docker hub
           uses: docker/login-action@v1
