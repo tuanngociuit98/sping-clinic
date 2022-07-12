@@ -31,6 +31,7 @@ jobs:
               name: my-snapshot
               path: target/spring-petclinic-2.6.0-SNAPSHOT.jar
               required: true
+
           - name: Upload Dockerfile 
             uses: actions/upload-artifact@v3   
             with:
@@ -45,6 +46,20 @@ jobs:
               key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
               restore-keys: |
                   ${{ runner.os }}-maven-
+
+          - name: Cache SonarCloud packages
+            uses: actions/cache@v1
+            with:
+             path: ~/.sonar/cache
+             key: ${{ runner.os }}-sonar
+             restore-keys: ${{ runner.os }}-sonar
+
+          - name: Build and analyze
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            run: |
+                mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=tuanngociuit98_spring-petclinic    
           
       Build-and-upload-docker-image:
 
@@ -87,37 +102,7 @@ jobs:
         - name: Verify
           run: echo ${{steps.docker_build.output.digest }}         
 
-      Check-quality-code:
-        runs-on:  ubuntu-latest
-        needs:  Build-snapshots
-      
-        steps:
-          - name: Checkout code 
-            uses: actions/checkout@v2
-            
-          - name: Setup java
-            uses: actions/setup-java@v3
-            with:
-              java-version: '11'
-              distribution: 'adopt'
-         
-          - name: Cache SonarCloud packages
-            uses: actions/cache@v1
-            with:
-             path: ~/.sonar/cache
-             key: ${{ runner.os }}-sonar
-             restore-keys: ${{ runner.os }}-sonar
-             
-         
-          - name: Build and analyze
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            run: |
-                 chmod +x mvnw
-                 mvn -N wrapper:wrapper -Dmaven=3.5.2
-                 mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=tuanngociuit98_spring-petclinic    
-          
+     
                
           
                  
