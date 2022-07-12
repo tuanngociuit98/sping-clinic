@@ -25,8 +25,6 @@ jobs:
               mvn -N wrapper:wrapper -Dmaven=3.5.2
               ./mvnw spring-boot:build-image
 
-
-
           - name: Upload snapshots
             uses: actions/upload-artifact@v3
             with:
@@ -91,7 +89,7 @@ jobs:
 
       Check-quality-code:
         runs-on:  ubuntu-latest
-        needs:  Build-and-upload-docker-image 
+        needs:  Build-snapshots
       
         steps:
           - name: Checkout code 
@@ -103,7 +101,13 @@ jobs:
               java-version: '11'
               distribution: 'adopt'
          
-
+          - name: Cache SonarCloud packages
+            uses: actions/cache@v1
+            with:
+             path: ~/.sonar/cache
+             key: ${{ runner.os }}-sonar
+             restore-keys: ${{ runner.os }}-sonar
+             
           - run: |
               chmod +x mvnw
               mvn -N wrapper:wrapper -Dmaven=3.5.2
