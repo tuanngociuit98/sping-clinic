@@ -108,17 +108,16 @@ jobs:
              key: ${{ runner.os }}-sonar
              restore-keys: ${{ runner.os }}-sonar
              
-          - run: |
-              chmod +x mvnw
-              mvn -N wrapper:wrapper -Dmaven=3.5.2
-              mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=tuanngociuit98_spring-petclinic
-              
-          
-          - name: SonarCloud Scan
-            uses: sonarsource/sonarcloud-github-action@master
-
+         
+          - name: Build and analyze
             env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}      
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+              run: |
+                 chmod +x mvnw
+                 mvn -N wrapper:wrapper -Dmaven=3.5.2
+                 mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=tuanngociuit98_spring-petclinic    
+          
+               
           
                  
