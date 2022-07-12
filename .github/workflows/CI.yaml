@@ -107,6 +107,7 @@ jobs:
           - run: |
               chmod +x mvnw
               mvn -N wrapper:wrapper -Dmaven=3.5.2
+              mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ve_spring-petclinic
               
           
           - name: SonarCloud Scan
