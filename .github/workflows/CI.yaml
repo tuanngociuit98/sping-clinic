@@ -111,7 +111,7 @@ jobs:
           - run: |
               chmod +x mvnw
               mvn -N wrapper:wrapper -Dmaven=3.5.2
-              
+              mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=tuanngociuit98_spring-petclinic
               
           
           - name: SonarCloud Scan
@@ -120,5 +120,5 @@ jobs:
             env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}      
-          - run: |
-               mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=tuanngociuit98_spring-petclinic  
+          
+                 
