@@ -92,7 +92,7 @@ jobs:
         - name: Build and push Docker Image
           run: |
             docker build -t spring-petclinic .
-            docker tage spring-petclinic: 00375877633/latest
+            docker tag spring-petclinic: 00375877633/latest
             docker push 00375877633/latest
             
 
