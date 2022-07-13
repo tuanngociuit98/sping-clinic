@@ -92,7 +92,7 @@ jobs:
         - name: Build and push Docker Image
           run: |
             docker build -t spring-petclinic .
-            docker push
+            docker push 00375877633/latest
             
 
         - name: Verify
