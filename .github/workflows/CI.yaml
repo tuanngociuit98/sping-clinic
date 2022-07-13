@@ -31,7 +31,7 @@ jobs:
               name: my-snapshot
               path: target/spring-petclinic-2.6.0-SNAPSHOT.jar
               required: true
-
+          
           - name: Upload Dockerfile 
             uses: actions/upload-artifact@v3   
             with:
@@ -54,7 +54,7 @@ jobs:
              key: ${{ runner.os }}-sonar
              restore-keys: ${{ runner.os }}-sonar
 
-          - name: Build and analyze
+          - name: Check code quality
             env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
               SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -90,14 +90,10 @@ jobs:
                 password: ${{ secrets.DOCKER_HUB_PASSWORD}}
 
         - name: Build and push Docker Image
-          uses: docker/build-push-action@v2
-          id: docker_build
-          with:
-              context: ./
-              file: ./Dockerfile
-              builder: ${{steps.buildx.output.name}}
-              push: true
-              tags: ${{secrets.DOCKER_HUB_USERNAME}}/latest
+          run: |
+            docker build -t spring-petclinic .
+            docker push
+            
 
         - name: Verify
           run: echo ${{steps.docker_build.output.digest }}         
