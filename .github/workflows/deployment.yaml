@@ -38,4 +38,4 @@ jobs:
           run: |
             kubectl apply -f eks/secret.yaml
             kubectl apply -f eks/my-app.yaml
-            kubectl expose deployments/my-app --type=LoadBalancer --port=80 
+            kubectl expose deployments/my-app --type=LoadBalancer --port=8080 
