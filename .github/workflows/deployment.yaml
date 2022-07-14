@@ -45,12 +45,12 @@ jobs:
        
        runs-on: ubuntu-latest 
        outputs:
-         status: ${{ steps.healthcheck.outputs.status }}
+         http_code: ${{ steps.healthcheck.outputs.http_code }}
        steps:  
         - name: healthcheck URL
           id: healthcheck
           run: |
-            set http_code =`curl -o -I -L -s -w "%{http_code}" google.com`
+            export http_code=`curl -o -I -L -s -w "%{http_code}" google.com`            
             echo `::set-output name=http_code::$httpcode`
             
 
@@ -60,7 +60,7 @@ jobs:
       steps:
         - name: Output
           run: |
-            echo {{steps.Check-health-URL.output.status}}
+            echo ${{needs.healthcheck.outputs.http_code}}
 
 
      
