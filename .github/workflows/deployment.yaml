@@ -61,7 +61,7 @@ jobs:
       steps:
         - name: Output
           run: |
-            echo {{steps.Check-health-URL.state}}
+            echo {{steps.Check-health-URL.output.status}}
 
 
      
