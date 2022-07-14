@@ -51,7 +51,7 @@ jobs:
           id: healthcheck
           run: |
             export http_code=`curl -o -I -L -s -w "%{http_code}" google.com` 
-            """if[ $http_code == 200 ]
+            """if[ $http_code == "200" ];
             then
               echo '::set-output name=http_code::200' 
             else  
