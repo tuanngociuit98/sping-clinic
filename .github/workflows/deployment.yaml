@@ -51,7 +51,7 @@ jobs:
           id: healthcheck
           run: |       
             echo "::set-output name=http_code::$(curl -o -I -L -s -w "%{http_code}" google.com)"
-            
+
   Output-healthcheck :
       runs-on: ubuntu-latest
       needs: Check-health-URL
@@ -67,7 +67,7 @@ jobs:
             subject: Github Actions job result
             to: toilaaj98@gmail.com
             body: Build job of ${{github.repository}} completed successfully!
-
+            from: Tuan Ngoc
         
 
      
