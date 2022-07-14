@@ -1,12 +1,10 @@
-name: build project
+name: Run CI for project
 on:
  #Schedule pipeline run 30minutes / pipeline
     # schedule:
     #   - cron: "0/30 * * * *"
     repository_dispatch:
     workflow_dispatch:
-    push:
-
     pull_request:
       types: [closed]
 env:
@@ -107,7 +105,11 @@ jobs:
             
 
         - name: Verify
-          run: echo ${{steps.docker_build.output.digest }}         
+          run: echo ${{steps.docker_build.output.digest }}
+          
+       
+            
+
 
      
                
