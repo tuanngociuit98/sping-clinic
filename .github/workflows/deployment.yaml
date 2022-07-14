@@ -60,14 +60,14 @@ jobs:
           if: ${{needs.Check-health-URL.outputs.http_code}} == 200
           uses:  AlexisMateo/sendmail-action@5
           with:
-            server_address: smtp.gmail.com
-            port: 465
-            username: ${{secrets.MAIL_USERNAME}}
-            password: ${{secrets.MAIL_PASSWORD}}
+            smtp-server: smtp.gmail.com
+            smtp-server-port: 465
+            auth-user: ${{secrets.MAIL_USERNAME}}
+            auth-password: ${{secrets.MAIL_PASSWORD}}
             subject: Workflow finished
             body: Deployment success
             to: tuanngociuit98@gmail.com
-            from: Tuanngoc
+            from: ${{secrets.MAIL_USERNAME}}
         
 
      
