@@ -1,4 +1,4 @@
-name: Run CI for project
+name: Run CD for project
 on:
  #Schedule pipeline run 30minutes / pipeline
     # schedule:
@@ -10,32 +10,59 @@ on:
           
 jobs: 
 
-  Deployment-project:
+  # Deployment-project:
               
-        runs-on:  ubuntu-latest 
+  #       runs-on:  ubuntu-latest 
 
-        steps:
-        - name: Clone repository code
-          uses: actions/checkout@v2
+  #       steps:
+  #       - name: Clone repository code
+  #         uses: actions/checkout@v2
 
-        - name: Install kubectl
-          uses: azure/setup-kubectl@v2.0
+  #       - name: Install kubectl
+  #         uses: azure/setup-kubectl@v2.0
+  #         with:
+  #            version: 'v1.21.3'
+  #         id: install
+
+  #       - name: Configure AWS credentials
+  #         uses: aws-actions/configure-aws-credentials@v1
+  #         with:
+  #           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #           aws-region: us-east-1
+
+  #       - name: Update kube configure
+  #         run: aws eks update-kubeconfig --name k8s-demo --region us-east-1
+
+  #       - name: Deploy image to Amazon EKS
+  #         run: |
+  #           kubectl apply -f eks/secret.yaml
+  #           kubectl apply -f eks/my-app.yaml
+  #           kubectl apply -f eks/my-app-service.yaml 
+
+  Check-health-URL:
+      #  needs: Deployment-project 
+       
+       runs-on: ubuntu-latest 
+       steps:  
+        - name: Check health URL
+          uses: jtalk/url-health-check-action@v2
+          id: check_health
           with:
-             version: 'v1.21.3'
-          id: install
+            url: google.com
+            follow-redirect: false
+            max-attempts: 3 
+            retry-delay: 5s 
+            retry-all: false
 
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: us-east-1
-
-        - name: Update kube configure
-          run: aws eks update-kubeconfig --name k8s-demo --region us-east-1
-
-        - name: Deploy image to Amazon EKS
+  Output-healthcheck :
+      runs-on: ubuntu-latest
+      needs: Check-health-URL
+      steps:
+        - name: Output
           run: |
-            kubectl apply -f eks/secret.yaml
-            kubectl apply -f eks/my-app.yaml
-            kubectl expose deployments/my-app --type=LoadBalancer --port=8080 
+            echo {{steps.Check-health-URL.state}}
+
+
+     
+          
