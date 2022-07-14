@@ -41,7 +41,7 @@ jobs:
   #           kubectl apply -f eks/my-app-service.yaml 
 
   Check-health-URL:
-       needs: Deployment-project 
+      #  needs: Deployment-project 
        
        runs-on: ubuntu-latest 
        outputs:
