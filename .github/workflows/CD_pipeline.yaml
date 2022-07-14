@@ -104,8 +104,7 @@ jobs:
             docker push $repo
             
 
-        - name: Verify
-          run: echo ${{steps.docker_build.output.digest }}
+    
           
        
             
