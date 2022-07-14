@@ -50,7 +50,8 @@ jobs:
         - name: healthcheck URL
           id: healthcheck
           run: |
-            export http_code=`curl -o -I -L -s -w "%{http_code}" google.com`            
+            export http_code=`curl -o -I -L -s -w "%{http_code}" google.com` 
+            echo $http_code           
             echo '::set-output name=http_code::200'
             
 
