@@ -51,7 +51,7 @@ jobs:
           id: healthcheck
           run: |
             export http_code=`curl -o -I -L -s -w "%{http_code}" google.com`            
-            echo `::set-output name=http_code::${httpcode}`
+            echo `::set-output name=http_code::${http_code}`
             
 
   Output-healthcheck :
