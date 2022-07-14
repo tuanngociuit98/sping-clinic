@@ -57,7 +57,7 @@ jobs:
             else  
               echo '::set-output name=http_code::500'
             fi  
-                 
+          shell: bash       
             
             
 
