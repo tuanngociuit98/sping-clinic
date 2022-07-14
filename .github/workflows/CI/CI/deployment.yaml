@@ -6,13 +6,13 @@ on:
     repository_dispatch:
     workflow_dispatch:
     push:
-
+env:
+  eks-name: k8s-demo
           
 jobs: 
 
   Deployment-project:
-        if: github.ref == 'refs/heads/main'
-        needs: Build-and-upload-docker-image
+              
         runs-on:  ubuntu-latest 
 
         steps:
@@ -20,7 +20,7 @@ jobs:
           uses: actions/checkout@v2
 
         - name: Install kubectl
-          uses: azure/setup-kubectl@v1
+          uses: azure/setup-kubectl@v2
           with:
              version: 'v1.21.3'
           id: install
@@ -33,10 +33,10 @@ jobs:
             aws-region: us-east-1
 
         - name: Update kube config
-          run: aws eks update-kubeconfig --name demo-github-action --region us-east-1
+          run: aws eks update-kubeconfig --name $eks-name --region us-east-1
 
         - name: Deploy image to Amazon EKS
           run: |
             kubectl apply -f eks/secret.yaml
             kubectl apply -f eks/my-app.yaml
-            kubectl apply -f eks/ingress.yaml 
+            kubectl expose deployments/my-app --type=LoadBalancer --port=80 
