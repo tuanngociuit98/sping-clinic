@@ -51,8 +51,15 @@ jobs:
           id: healthcheck
           run: |
             export http_code=`curl -o -I -L -s -w "%{http_code}" google.com` 
-            echo $http_code           
-            echo '::set-output name=http_code::${{http_code}}'
+            if[$http_code == 200]
+            then
+              echo '::set-output name=http_code::200' 
+            fi  
+            if[$http_code != 200]
+            then
+              echo '::set-output name=http_code::500' 
+            fi        
+            
             
 
   Output-healthcheck :
