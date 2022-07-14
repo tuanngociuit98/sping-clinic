@@ -5,6 +5,14 @@ on:
     #   - cron: "0/30 * * * *"
     repository_dispatch:
     workflow_dispatch:
+    push:
+
+    pull_request:
+      types: [closed]
+env:
+    repo: 00375877633/latest    
+    snapshot: spring-petclinic-2.6.0-SNAPSHOT.jar   
+    projectKey: tuanngociuit98_spring-petclinic
           
 jobs: 
       Build-snapshots:
@@ -25,11 +33,18 @@ jobs:
               mvn -N wrapper:wrapper -Dmaven=3.5.2
               ./mvnw spring-boot:build-image
 
+          - name: Check code quality
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            run: |
+                mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=$projectKey    
+
           - name: Upload snapshots
             uses: actions/upload-artifact@v3
             with:
               name: my-snapshot
-              path: target/spring-petclinic-2.6.0-SNAPSHOT.jar
+              path: target/$snapshot
               required: true
           
           - name: Upload Dockerfile 
@@ -54,15 +69,10 @@ jobs:
              key: ${{ runner.os }}-sonar
              restore-keys: ${{ runner.os }}-sonar
 
-          - name: Check code quality
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            run: |
-                mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=tuanngociuit98_spring-petclinic    
+              
           
       Build-and-upload-docker-image:
-
+        if: github.ref == 'refs/heads/main'
         runs-on:  ubuntu-latest
         needs: Build-snapshots
         steps:  
@@ -92,8 +102,8 @@ jobs:
         - name: Build and push Docker Image
           run: |
             docker build -t spring-petclinic .
-            docker tag spring-petclinic:latest 00375877633/latest
-            docker push 00375877633/latest
+            docker tag spring-petclinic:latest $repo
+            docker push $repo
             
 
         - name: Verify
