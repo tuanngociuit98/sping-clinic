@@ -60,7 +60,7 @@ jobs:
       steps:
         - name: Output
           run: |
-            echo ${{needs.healthcheck.outputs.http_code}}
+            echo ${{needs.Check-health-URL.outputs.http_code}}
 
 
      
