@@ -4,7 +4,6 @@ on:
       workflows: ["Run CI for project"]
       types:
         - "completed"
-    repository_dispatch:
     workflow_dispatch:
        
 jobs: 
