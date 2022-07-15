@@ -1,4 +1,4 @@
-name: Run CD for project
+name: Continuos deployment for project
 on:
  #Schedule pipeline run 30minutes / pipeline
     # schedule:
@@ -10,38 +10,43 @@ on:
           
 jobs: 
 
-  # Deployment-project:
+  Deployment-project:
               
-  #       runs-on:  ubuntu-latest 
+        runs-on:  ubuntu-latest 
 
-  #       steps:
-  #       - name: Clone repository code
-  #         uses: actions/checkout@v2
+        steps:
+        - name: Clone repository code
+          uses: actions/checkout@v2
 
-  #       - name: Install kubectl
-  #         uses: azure/setup-kubectl@v2.0
-  #         with:
-  #            version: 'v1.21.3'
-  #         id: install
+        - name: Install kubectl
+          uses: azure/setup-kubectl@v2.0
+          with:
+             version: 'v1.21.3'
+          id: install
 
-  #       - name: Configure AWS credentials
-  #         uses: aws-actions/configure-aws-credentials@v1
-  #         with:
-  #           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #           aws-region: us-east-1
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
 
-  #       - name: Update kube configure
-  #         run: aws eks update-kubeconfig --name k8s-demo --region us-east-1
+        - name: Update kube configure
+          run: aws eks update-kubeconfig --name k8s-demo --region us-east-1
 
-  #       - name: Deploy image to Amazon EKS
-  #         run: |
-  #           kubectl apply -f eks/secret.yaml
-  #           kubectl apply -f eks/my-app.yaml
-  #           kubectl apply -f eks/my-app-service.yaml 
+        - name: Deploy image to Amazon EKS
+          run: |
+            kubectl apply -f eks/secret.yaml
+            kubectl apply -f eks/my-app.yaml
+            kubectl apply -f eks/my-app-service.yaml 
+
+        - name: Waiting for Deployment
+          run: |
+            sleep 120s
+          shell: bash      
 
   Check-health-URL:
-      #  needs: Deployment-project 
+       needs: Deployment-project 
        
        runs-on: ubuntu-latest 
        outputs:
@@ -51,6 +56,7 @@ jobs:
           id: healthcheck
           run: |       
             echo "::set-output name=http_code::$(curl -o -I -L -s -w "%{http_code}" google.com)"
+            
 
   Output-healthcheck :
       runs-on: ubuntu-latest
@@ -66,6 +72,13 @@ jobs:
            channel: '#ci'
            message: Deploy  Successfully
         
+        - name: Notify deployment success
+          if: ${{needs.Check-health-URL.outputs.http_code}} != 200
+          uses: act10ns/slack@v1
+          with: 
+           status: Deployment failed
+           channel: '#ci'
+           message: Deployment fail,  Please rollback k8s
 
      
           
