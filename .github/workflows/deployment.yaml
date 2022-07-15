@@ -1,8 +1,9 @@
 name: Continuos deployment for project
 on:
- #Schedule pipeline run 30minutes / pipeline
-    # schedule:
-    #   - cron: "0/30 * * * *"
+    workflow_run:
+      workflows: ["Run CI for project"]
+      types:
+        - "completed"
     repository_dispatch:
     workflow_dispatch:
     push:
@@ -10,8 +11,7 @@ on:
           
 jobs: 
 
-  Deployment-project:
-              
+  Deployment-project:              
         runs-on:  ubuntu-latest 
         steps:
         - name: Clone repository code
@@ -66,15 +66,15 @@ jobs:
         - name: Run http code
           run: echo ${{needs.Check-health-URL.outputs.http_code}}
         - name: Notify deployment success
-          if: ${{needs.Check-health-URL.outputs.http_code}} == 200
+          if: ${{needs.Check-health-URL.outputs.http_code == 200}} 
           uses: act10ns/slack@v1
           with: 
            status: build successfull
            channel: '#ci'
            message: Deploy  Successfully
         
-        - name: Notify deployment success
-          if: ${{needs.Check-health-URL.outputs.http_code}} != 200
+        - name: Notify deployment fail
+          if: ${{needs.Check-health-URL.outputs.http_code != 200}} 
           uses: act10ns/slack@v1
           with: 
            status: Deployment failed
