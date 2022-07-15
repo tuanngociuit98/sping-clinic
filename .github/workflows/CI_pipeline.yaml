@@ -30,7 +30,7 @@ jobs:
             run: |
              chmod +x mvnw
               mvn -N wrapper:wrapper -Dmaven=3.5.2
-              ./mvnw spring-boot:build-image
+              ./mvnw spring-boot:build-image -Dcheckstyle.skip
 
           - name: Check code quality
             env:
