@@ -55,6 +55,8 @@ jobs:
   Output-healthcheck :
       runs-on: ubuntu-latest
       needs: Check-health-URL
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       steps:
         - name: Notify deployment success
           if: ${{needs.Check-health-URL.outputs.http_code}} == 200
