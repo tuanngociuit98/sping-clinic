@@ -19,6 +19,21 @@ jobs:
           - name: Checkout code 
             uses: actions/checkout@v2
 
+          - name: Cache building dependencies
+            uses:  actions/cache@v2
+            with:
+              path: ~/.m2/repository
+              key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+              restore-keys: |
+                  ${{ runner.os }}-maven-
+
+          - name: Cache SonarCloud packages
+            uses: actions/cache@v1
+            with:
+             path: ~/.sonar/cache
+             key: ${{ runner.os }}-sonar
+             restore-keys: ${{ runner.os }}-sonar
+
           - name: Setup java
             uses: actions/setup-java@v3
             with:
@@ -51,23 +66,7 @@ jobs:
               name: Dockerfile
               path: Dockerfile
               required: true 
-
-          - name: Cache building dependencies
-            uses:  actions/cache@v2
-            with:
-              path: ~/.m2/repository
-              key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-              restore-keys: |
-                  ${{ runner.os }}-maven-
-
-          - name: Cache SonarCloud packages
-            uses: actions/cache@v1
-            with:
-             path: ~/.sonar/cache
-             key: ${{ runner.os }}-sonar
-             restore-keys: ${{ runner.os }}-sonar
-
-              
+            
           
       Build-and-upload-docker-image:
         if: github.ref == 'refs/heads/main'

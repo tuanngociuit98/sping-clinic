@@ -13,7 +13,6 @@ jobs:
   Deployment-project:
               
         runs-on:  ubuntu-latest 
-
         steps:
         - name: Clone repository code
           uses: actions/checkout@v2
@@ -32,7 +31,7 @@ jobs:
             aws-region: us-east-1
 
         - name: Update kube configure
-          run: aws eks update-kubeconfig --name app-demo --region us-east-1
+          run: aws eks update-kubeconfig --name k8s-demo --region us-east-1
 
         - name: Deploy image to Amazon EKS
           run: |
@@ -45,7 +44,7 @@ jobs:
             sleep 120s
           shell: bash      
 
-  Checkhealth-URL:
+  Check-health-URL:
        needs: Deployment-project 
        
        runs-on: ubuntu-latest 
@@ -55,7 +54,7 @@ jobs:
         - name: healthcheck URL
           id: healthcheck
           run: |       
-            echo "::set-output name=http_code::$(curl -o -I -L -s -w "%{http_code}" google.com)"
+            echo "::set-output name=http_code::$(curl -o -I -L -s -w "%{http_code}" ae9786127e4394b28b06925303ad774d-1000177221.us-east-1.elb.amazonaws.com)"
             
 
   Notify-healthcheck :
