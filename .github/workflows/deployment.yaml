@@ -58,11 +58,11 @@ jobs:
       steps:
         - name: Notify deployment success
           if: ${{needs.Check-health-URL.outputs.http_code}} == 200
-          uses: joshmgross/send-slack-message@main
-          with:
-            message: 'deployment success'
-            channel: ${{ secrets.SLACK_CHANNEL_ID }}
-            slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          uses: act10ns/slack@v1
+          with: 
+           status: build successfull
+           channel: '#ci'
+           message: Deploy  Successfully
         
 
      
