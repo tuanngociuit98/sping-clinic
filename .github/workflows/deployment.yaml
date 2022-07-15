@@ -63,6 +63,8 @@ jobs:
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       steps:
+        - name: Run http code
+          run: echo ${{needs.Check-health-URL.outputs.http_code}}
         - name: Notify deployment success
           if: ${{needs.Check-health-URL.outputs.http_code}} == 200
           uses: act10ns/slack@v1
